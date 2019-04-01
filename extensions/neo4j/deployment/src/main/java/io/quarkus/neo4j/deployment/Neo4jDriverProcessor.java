@@ -26,7 +26,7 @@ class Neo4jDriverProcessor {
 
     @BuildStep
     AdditionalBeanBuildItem registerBean() {
-        return new AdditionalBeanBuildItem(false, Neo4jDriverProducer.class);
+        return AdditionalBeanBuildItem.unremovableOf(Neo4jDriverProducer.class);
     }
 
     @BuildStep
