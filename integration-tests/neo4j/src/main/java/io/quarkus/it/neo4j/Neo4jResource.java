@@ -1,4 +1,4 @@
-package io.quarkus.example.neo4j;
+package io.quarkus.it.neo4j;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

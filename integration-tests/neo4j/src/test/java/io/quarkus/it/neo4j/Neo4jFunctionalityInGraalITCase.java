@@ -1,4 +1,4 @@
-package io.quarkus.example.test;
+package io.quarkus.it.neo4j;
 
 import io.quarkus.test.junit.SubstrateTest;
 
