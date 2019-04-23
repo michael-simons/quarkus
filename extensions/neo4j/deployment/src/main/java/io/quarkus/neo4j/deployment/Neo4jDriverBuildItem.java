@@ -1,8 +1,8 @@
 package io.quarkus.neo4j.deployment;
 
-import org.jboss.builder.item.SimpleBuildItem;
-import org.neo4j.driver.v1.Driver;
+import org.neo4j.driver.Driver;
 
+import io.quarkus.builder.item.SimpleBuildItem;
 import io.quarkus.runtime.RuntimeValue;
 
 /**

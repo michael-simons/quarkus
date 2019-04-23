@@ -7,12 +7,13 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
-import org.neo4j.driver.v1.Driver;
-import org.neo4j.driver.v1.Session;
-import org.neo4j.driver.v1.StatementResult;
-import org.neo4j.driver.v1.StatementResultCursor;
-import org.neo4j.driver.v1.Transaction;
-import org.neo4j.driver.v1.Values;
+import org.neo4j.driver.Driver;
+import org.neo4j.driver.Session;
+import org.neo4j.driver.StatementResult;
+import org.neo4j.driver.Transaction;
+import org.neo4j.driver.Values;
+import org.neo4j.driver.async.AsyncSession;
+import org.neo4j.driver.async.StatementResultCursor;
 
 /**
  * @author Michael J. Simons
@@ -65,17 +66,19 @@ public class Neo4jResource {
     }
 
     private static void readNodesAsync(Driver driver) {
-        try (Session session = driver.session()) {
-            session.runAsync("UNWIND range(1, 3) AS x RETURN x")
-                    .thenCompose(StatementResultCursor::listAsync)
-                    .whenComplete((records, error) -> {
-                        if (records != null) {
-                            System.out.println(records);
-                        } else {
-                            error.printStackTrace();
-                        }
-                    });
-        }
+        AsyncSession session = driver.asyncSession();
+        session
+                .runAsync("UNWIND range(1, 3) AS x RETURN x")
+                .thenCompose(StatementResultCursor::listAsync)
+                .whenComplete((records, error) -> {
+                    if (records != null) {
+                        System.out.println(records);
+                    } else {
+                        error.printStackTrace();
+                    }
+                })
+                .thenCompose(records -> session.closeAsync()
+                        .thenApply(ignore -> records));
     }
 
     private void reportException(String errorMessage, final Exception e, final PrintWriter writer) {

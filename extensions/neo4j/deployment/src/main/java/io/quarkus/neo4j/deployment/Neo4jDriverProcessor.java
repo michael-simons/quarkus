@@ -1,6 +1,6 @@
 package io.quarkus.neo4j.deployment;
 
-import org.neo4j.driver.v1.Driver;
+import org.neo4j.driver.Driver;
 
 import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
 import io.quarkus.arc.deployment.BeanContainerBuildItem;

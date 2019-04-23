@@ -4,7 +4,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Singleton;
 
-import org.neo4j.driver.v1.Driver;
+import org.neo4j.driver.Driver;
 
 /**
  * @author Michael J. Simons
