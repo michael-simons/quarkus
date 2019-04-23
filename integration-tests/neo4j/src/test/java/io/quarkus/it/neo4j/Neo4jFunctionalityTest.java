@@ -1,7 +1,11 @@
 package io.quarkus.it.neo4j;
 
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
@@ -21,8 +25,25 @@ import io.restassured.RestAssured;
 public class Neo4jFunctionalityTest {
 
     @Test
-    public void testNeo4jFunctionalityFromServlet() {
-        RestAssured.given().when().get("/neo4j/testfunctionality").then().body(is("OK"));
+    public void testBlockingNeo4jFunctionality() {
+        RestAssured.given().when().get("/neo4j/blocking").then().body(is("OK"));
     }
 
+    @Test
+    public void testAsynchronousNeo4jFunctionality() {
+        RestAssured.given()
+                .when().get("/neo4j/asynchronous")
+                .then().statusCode(200)
+                .body(is(equalTo(Stream.of(1, 2, 3).map(i -> i.toString()).collect(Collectors.joining(",", "[", "]")))));
+    }
+
+    @Test
+    @Disabled // Works only with Neo4j 4.0
+    public void testReactiveNeo4jFunctionality() {
+        RestAssured.given()
+                .when().get("/neo4j/reactive")
+                .prettyPeek()
+                .then().statusCode(200)
+                .contentType("text/event-stream");
+    }
 }

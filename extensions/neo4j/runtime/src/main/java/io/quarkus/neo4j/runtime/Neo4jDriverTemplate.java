@@ -8,7 +8,6 @@ import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
 
 import io.quarkus.arc.runtime.BeanContainer;
-import io.quarkus.runtime.RuntimeValue;
 import io.quarkus.runtime.ShutdownContext;
 import io.quarkus.runtime.annotations.Template;
 
@@ -20,22 +19,18 @@ public class Neo4jDriverTemplate {
 
     static volatile Driver driver;
 
-    public RuntimeValue<Driver> configureDriver(
-            BeanContainer container, Neo4jDriverConfiguration configuration,
+    public void configureNeo4jProducer(BeanContainer beanContainer, Neo4jDriverConfiguration configuration,
             ShutdownContext shutdownContext) {
-        initialize(configuration);
-        Neo4jDriverProducer producer = container.instance(Neo4jDriverProducer.class);
-        producer.initialize(driver);
-        shutdownContext.addShutdownTask(driver::close);
 
-        return new RuntimeValue<>(driver);
-    }
-
-    void initialize(Neo4jDriverConfiguration configuration) {
-        if (driver != null) {
-            return;
+        if (driver == null) {
+            initializeDriver(configuration, shutdownContext);
         }
 
+        Neo4jDriverProducer driverProducer = beanContainer.instance(Neo4jDriverProducer.class);
+        driverProducer.initialize(driver);
+    }
+
+    private void initializeDriver(Neo4jDriverConfiguration configuration, ShutdownContext shutdownContext) {
         AuthToken authToken;
         String uri;
 
@@ -51,5 +46,6 @@ public class Neo4jDriverTemplate {
         }
 
         driver = GraphDatabase.driver(uri, authToken);
+        shutdownContext.addShutdownTask(driver::close);
     }
 }
