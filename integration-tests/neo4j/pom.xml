@@ -33,7 +33,7 @@
     <properties>
         <neo4j.uri>bolt://localhost:7687</neo4j.uri>
         <neo4j.username>neo4j</neo4j.username>
-        <neo4j.password>music</neo4j.password>
+        <neo4j.password>secret</neo4j.password>
     </properties>
 
     <dependencies>

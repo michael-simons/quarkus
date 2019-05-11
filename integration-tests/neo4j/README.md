@@ -10,7 +10,7 @@ To run the tests in a standard JVM with Neo4j started as a Docker container, you
 mvn clean install -Pdocker-neo4j -Ptest-neo4j
 ```
 
-To also test as a native image, add `-Dnative-image`:
+To also test as a native image, add `-Pnative-image`:
 
 ```
 mvn clean install -Pdocker-neo4j -Ptest-neo4j -Pnative-image
