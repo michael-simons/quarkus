@@ -172,7 +172,7 @@
                                     <graalvmHome>${graalvmHome}</graalvmHome>
                                     <enableJni>true</enableJni>
                                     <debugBuildProcess>false</debugBuildProcess>
-                                    <additionalBuildArgs>--enable-https</additionalBuildArgs>
+                                    <additionalBuildArgs>--enable-https,-H:+ReportExceptionStackTraces</additionalBuildArgs>
                                 </configuration>
                             </execution>
                         </executions>
