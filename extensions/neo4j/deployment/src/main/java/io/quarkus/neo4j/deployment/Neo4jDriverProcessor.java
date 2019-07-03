@@ -1,10 +1,14 @@
 package io.quarkus.neo4j.deployment;
 
+import javax.inject.Inject;
+
 import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
 import io.quarkus.arc.deployment.BeanContainerBuildItem;
+import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.annotations.ExecutionTime;
 import io.quarkus.deployment.annotations.Record;
+import io.quarkus.deployment.builditem.ExtensionSslNativeSupportBuildItem;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.builditem.ShutdownContextBuildItem;
 import io.quarkus.neo4j.runtime.Neo4jDriverConfiguration;
@@ -15,6 +19,9 @@ import io.quarkus.neo4j.runtime.Neo4jDriverTemplate;
  * @author Michael J. Simons
  */
 class Neo4jDriverProcessor {
+
+    @Inject
+    BuildProducer<ExtensionSslNativeSupportBuildItem> extensionSslNativeSupport;
 
     @BuildStep
     FeatureBuildItem createFeature() {
@@ -31,6 +38,9 @@ class Neo4jDriverProcessor {
     void configureDriverProducer(Neo4jDriverTemplate template, BeanContainerBuildItem beanContainerBuildItem,
             Neo4jDriverConfiguration configuration,
             ShutdownContextBuildItem shutdownContext) {
+
+        // Indicates that this extension would like the SSL support to be enabled
+        extensionSslNativeSupport.produce(new ExtensionSslNativeSupportBuildItem(FeatureBuildItem.NEO4J));
 
         template.configureNeo4jProducer(beanContainerBuildItem.getValue(), configuration, shutdownContext);
     }
