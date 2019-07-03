@@ -20,8 +20,8 @@ import org.neo4j.driver.Transaction;
 import org.neo4j.driver.Values;
 import org.neo4j.driver.async.AsyncSession;
 import org.neo4j.driver.async.StatementResultCursor;
-import org.neo4j.driver.reactive.RxResult;
 import org.neo4j.driver.reactive.RxSession;
+import org.neo4j.driver.reactive.RxStatementResult;
 import org.reactivestreams.Publisher;
 
 import reactor.core.publisher.Flux;
@@ -78,7 +78,7 @@ public class Neo4jResource {
     public Publisher<Integer> f() {
 
         return Flux.using(driver::rxSession, session -> session.readTransaction(tx -> {
-            RxResult result = tx.run("UNWIND range(1, 3) AS x RETURN x", Collections.emptyMap());
+            RxStatementResult result = tx.run("UNWIND range(1, 3) AS x RETURN x", Collections.emptyMap());
             return Flux.from(result.records()).map(record -> record.get("x").asInt());
         }), RxSession::close);
     }
